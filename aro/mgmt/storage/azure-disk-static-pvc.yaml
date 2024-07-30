@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: azure-disk-static-pvc
+  namespace: test-storage # Replace with your namespace
+  labels:
+    app-lbl: pod-disk-static
+  annotations:
+    app-annotation: pod-disk-static
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi # Specify the size of the disk
+  selector:
+    matchLabels:
+      type: azure-disk
+  storageClassName: ""

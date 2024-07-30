@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: calculator-ing
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    appgw.ingress.kubernetes.io/backend-path-prefix: "/calculator/"
+spec:
+  ingressClassName: azure-application-gateway
+  rules:
+  - http:
+      paths:
+      - pathType: Exact
+        path: /api
+        backend:
+          service:
+            name: calculator-api-svc
+            port: 
+              number: 80
+      - pathType: Exact
+        path: /
+        backend:
+          service:
+            name: calculator-ui-svc
+            port: 
+              number: 80

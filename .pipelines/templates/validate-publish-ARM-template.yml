@@ -1,0 +1,47 @@
+parameters:
+- name: azureSubscription
+  type: string
+- name: resourceGroup
+  type: string
+- name: location
+  type: string
+- name: armTemplate
+  type: string
+- name: armTemplateFileName
+  type: string
+  default: 'azuredeploy.json'
+- name: templateParametersFileName
+  type: string
+  default: 'azuredeploy.parameters.json'
+
+jobs:
+- job: Validate_Publish_ARM_Template_Job
+  steps:
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Azure Deployment: Validate ARM Template'
+    inputs:
+      azureSubscription: '${{ parameters.azureSubscription }}'
+      resourceGroupName: '${{ parameters.resourceGroup }}'
+      location: '${{ parameters.location }}'
+      csmFile: '$(Pipeline.Workspace)/s/infra/${{ parameters.armTemplate }}/${{ parameters.armTemplateFileName }}'
+      csmParametersFile: '$(Pipeline.Workspace)/s/infra/${{ parameters.armTemplate }}/${{ parameters.templateParametersFileName }}'
+      deploymentMode: Validation
+
+  - task: CopyFiles@2
+    displayName: 'Copy ARM Templates'
+    inputs:
+      SourceFolder: '$(Pipeline.Workspace)/s/infra/${{ parameters.armTemplate }}'
+      Contents: |
+        **/*.bicep
+        **/*.json
+        **/*.sh
+        **/*.ps1
+      TargetFolder: '$(build.artifactstagingdirectory)/${{ parameters.armTemplate }}'
+      OverWrite: true
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)/${{ parameters.armTemplate }}'
+      ArtifactName: '${{ parameters.armTemplate }}'
+    condition: succeededOrFailed()

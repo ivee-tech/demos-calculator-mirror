@@ -1,0 +1,9 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: openshift-logging-operator-group
+  namespace: openshift-logging-operator
+spec:
+  targetNamespaces:
+  - openshift-logging-operator
+  upgradeStrategy: Default

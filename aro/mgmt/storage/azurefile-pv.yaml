@@ -1,0 +1,35 @@
+# Storage can be provisioned:
+# - statically: PVs are created by admins, then PVs are consumed by PVCs (usually devs create PVCs to request storage)
+# - dynamically: PVCs reference storage classes directly and storage accounts are created automatically
+# Pods reference PVCs to access volumes, and the volumes are mounted into the containers
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: file.csi.azure.com
+  name: azurefile-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azurefile-csi
+  csi:
+    driver: file.csi.azure.com
+    volumeHandle: e41662de-8115-48ea-af6d-c332fd67daf5  # make sure this volumeid is unique for every identical share in the cluster
+    volumeAttributes:
+      resourceGroup: rg-auea-dev-ncis  # optional, only set this when storage account is not in the same resource group as node
+      shareName: fsaueadevdemox01
+    nodeStageSecretRef:
+      name: azure-files-secret
+      namespace: test-storage
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=0
+    - gid=0
+    - mfsymlinks
+    - cache=strict
+    - nosharesock
+    - nobrl

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-files-dyn2
+  namespace: test-storage
+spec:
+  containers:
+  - name: nginx01
+    image: nginx
+    volumeMounts:
+    - mountPath: "/mnt/azure"
+      name: azure-files-volume
+    resources: {}
+  volumes:
+  - name: azure-files-volume
+    persistentVolumeClaim:
+      claimName: azure-files-dyn-pvc

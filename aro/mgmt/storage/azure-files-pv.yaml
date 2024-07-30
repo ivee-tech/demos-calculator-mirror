@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: azure-files-pv
+  labels:
+    type: azure-files
+spec:
+  capacity:
+    storage: 5Gi # Specify the size of the disk. This should match the actual disk size.
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  azureFile:
+      secretName: azure-files-secret # The name of the Kubernetes secret containing your Azure storage account key
+      shareName: fsaueadevdemox01 # The name of your Azure file share
+      readOnly: false # Set to true if you need read-only access
+  storageClassName: "" # Use an empty string to avoid dynamic provisioning
+  mountOptions:
+    - dir_mode=0777 # Optional: Specifies the directory permissions. Adjust if necessary.
+    - file_mode=0777 # Optional: Specifies the file permissions. Adjust if necessary.
+    - uid=1000 # Optional: Specifies the user ID. Adjust if necessary.
+    - gid=1000 # Optional: Specifies the group ID. Adjust if necessary.

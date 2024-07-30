@@ -1,0 +1,49 @@
+parameters:
+- name: tag
+  type: string
+
+trigger:
+  none
+
+stages:
+- stage: Build_Ui_Image
+  variables:
+  - name: acrName
+    value: 'acr85618'
+  - name: type
+    value: 'ui'
+  - name: args
+    value: ''
+  - name: dockerfilePath
+    value: './Dockerfile'
+  - name: tag
+    value: ${{ parameters.tag }}
+  - name: registry
+    value: $(acrName).azurecr.io
+  - name: rns
+    value: calculator
+  jobs:
+  - job: Build_Push_ACR_Image
+    pool:
+      name: 'Demos'
+    steps:
+    - script: |
+        img="calculator-$TYPE:$TAG"
+        az login --identity
+        sudo az acr login --name $ACRNAME
+        cd $(Pipeline.Workspace)/s/$TYPE
+        sudo docker build -t $img $ARGS -f $DOCKERFILEPATH .
+
+        sudo docker tag ${img} $REGISTRY/$RNS/$img
+        sudo docker push $REGISTRY/$RNS/$img
+      displayName: 'Build & push container $(type) image to ACR'
+  # - template: '../templates/push-acr-image.yml'
+  #   parameters: 
+  #     dockerRegistryServiceConnection: acr85618
+  #     containerRegistry: acr85618.azurecr.io
+  #     imageRepository: calculator/calculator-api
+  #     tag: ${{ parameters.tag }}
+  #     appPath: './api/Calculator.Web.Api'
+  #     scanImage: false
+  #     poolName: 'Demos'
+  #     vmImageName: ''

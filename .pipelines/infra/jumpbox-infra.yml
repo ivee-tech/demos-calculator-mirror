@@ -1,0 +1,35 @@
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: calculator-common
+- group: calculator-dev
+
+steps:
+- task: AzureCLI@2
+  displayName: 'Deploy jumpbox'
+  inputs:
+    azureSubscription: 'VSP'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      LOCATION='$(location)'
+      JUMPBOX_VM_NAME='$(jumpBoxVMName)'
+      VNET_NAME='$(vnetName)'
+      SUBNET_NAME='$(subnetName)'
+      LOCAL_ADMIN_PASSWORD='$(localAdminPassword)'
+      RESOURCE_GROUP_NAME='$(resourceGroup)'
+      ### validate template
+      az deployment group validate \
+          --resource-group "$RESOURCE_GROUP_NAME" \
+          --template-file "infra/jumpbox.bicep"  \
+          --parameters jumpBoxVMName="${JUMPBOX_VM_NAME}" vnetName="${VNET_NAME}" subnetName="${SUBNET_NAME}" localAdminPassword="${LOCAL_ADMIN_PASSWORD}" \
+          --output json
+      ### deploy template
+      az deployment group create \
+          --resource-group "$RESOURCE_GROUP_NAME" \
+          --template-file "infra/jumpbox.bicep"  \
+          --parameters jumpBoxVMName="${JUMPBOX_VM_NAME}" vnetName="${VNET_NAME}" subnetName="${SUBNET_NAME}" localAdminPassword="${LOCAL_ADMIN_PASSWORD}" \
+          --output json

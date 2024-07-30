@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    azure.workload.identity/client-id: d3d816a1-d038-46d9-b144-feeef0601a00 # {{ .Values.workloadIdentityId }} # $userIdClientId
+  labels:
+    azure.workload.identity/use: "true"
+  name: calculator-sa

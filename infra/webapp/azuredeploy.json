@@ -1,0 +1,113 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.1272.37030",
+      "templateHash": "17943686847574325083"
+    }
+  },
+  "parameters": {
+    "planName": {
+      "type": "string"
+    },
+    "appName": {
+      "type": "string"
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "S1",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "metadata": {
+        "description": "Describes plan's pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
+      }
+    },
+    "skuCapacity": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "metadata": {
+        "description": "Describes plan's instance count"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    },
+    "setSystemIdentity": {
+      "type": "string",
+      "defaultValue": "off",
+      "allowedValues": [
+        "on",
+        "off"
+      ],
+      "metadata": {
+        "description": "If true, set the system identity."
+      }
+    }
+  },
+  "variables": {
+    "hostingPlanName_var": "[parameters('planName')]",
+    "webSiteName_var": "[parameters('appName')]",
+    "identity_var": "[if(equals(parameters('setSystemIdentity'), 'on'), createObject('type', 'SystemAssigned'), createObject('type', 'None'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2021-03-01",
+      "name": "[variables('hostingPlanName_var')]",
+      "location": "[parameters('location')]",
+      "tags": {
+        "displayName": "HostingPlan"
+      },
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "capacity": "[parameters('skuCapacity')]"
+      },
+      "properties": {
+        "name": "[variables('hostingPlanName_var')]"
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2021-03-01",
+      "name": "[variables('webSiteName_var')]",
+      "location": "[parameters('location')]",
+      "tags": {
+        "[format('hidden-related:{0}', resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName_var')))]": "empty",
+        "displayName": "Website"
+      },
+      "identity": "[variables('identity_var')]",
+      "properties": {
+        "name": "[variables('webSiteName_var')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName_var'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName_var'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "siteUri": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Web/sites', variables('webSiteName_var'))).hostNames[0]]"
+    }
+  }
+}

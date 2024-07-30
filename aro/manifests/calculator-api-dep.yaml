@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculator-api-dep
+  namespace: calculator # {{ .Values.namespace }}
+  labels:
+    app: calculator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: calculator-api
+  template:
+    metadata:
+      labels:
+        azure.workload.identity/use: "true"
+        tier: calculator-api
+    spec:
+      # serviceAccountName: calculator-sa
+      # initContainers:
+      # - name: calculator-api-init
+      #   image: busybox
+      #   envFrom:
+      #   - secretRef:
+      #       name: settings--calcdbconnectionstring
+      #   volumeMounts:
+      #   - name: secrets-store01-inline
+      #     mountPath: "/mnt/secrets-store"
+      #     readOnly: true
+      containers:
+      - name: calculator-api
+        image: acraueadevncisws01.azurecr.io/calculator/calculator-api:0.0.3 # {{ .Values.repo }}/calculator-api:{{ .Values.api.tag }}
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - secretRef:
+            name: settings--calcdbconnectionstring
+        resources: {}
+        # resources:
+        #   requests:
+        #     cpu: {{ .Values.metadataApi.resources.requests.cpu }}
+        #     memory: {{ .Values.metadataApi.resources.requests.memory }}
+        #   limits:
+        #     cpu: {{ .Values.metadataApi.resources.limits.cpu }}
+        #     memory: {{ .Values.metadataApi.resources.limits.memory }}
+        # volumeMounts:
+        # - name: secrets-store01-inline
+        #   mountPath: "/mnt/secrets-store"
+        #   readOnly: true
+        imagePullPolicy: Always
+      # volumes:
+      # - name: secrets-store01-inline
+      #   csi:
+      #     driver: secrets-store.csi.k8s.io
+      #     readOnly: true
+      #     volumeAttributes:
+      #       secretProviderClass: "calculator-spc"

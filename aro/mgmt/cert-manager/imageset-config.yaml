@@ -1,0 +1,22 @@
+kind: ImageSetConfiguration
+apiVersion: mirror.openshift.io/v1alpha2
+storageConfig:
+  registry:
+    imageURL: acraueadevncisws01.azurecr.io/mirror/oc-mirror-metadata 
+    skipTLS: false
+mirror:
+  platform:
+    channels:
+    - name: stable-4.12
+      type: ocp
+      minVersion: 4.12.25
+      maxVersion: 4.12.30 
+  operators: 
+  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.12
+    packages: 
+    - name: openshift-cert-manager-operator
+      channels:
+      - name: stable-v1
+    - name: cluster-logging
+      channels:
+      - name: stable-5.8

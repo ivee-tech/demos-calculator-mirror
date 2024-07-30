@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-django-app-test-dep
+  namespace: itp # {{ .Values.namespace }}
+  labels:
+    app: sample-django-app-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: sample-django-app-test
+  template:
+    metadata:
+      labels:
+        azure.workload.identity/use: "true"
+        tier: sample-django-app-test
+    spec:
+      serviceAccountName: sample-django-app-sa
+      initContainers:
+      - name: sample-django-app-test-init
+        image: busybox
+        envFrom:
+        - secretRef:
+            name: sampledjangoapp--adminpassword
+        volumeMounts:
+        - name: secrets-store01-inline
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+      containers:
+      - name: sample-django-app
+        image: curlimages/curl
+        command: 
+        - "/bin/sh"
+        - "-c"
+        - |
+          baseUrl='http://sample-django-app-svc'
+          url="$baseUrl/users/"
+          # for i in $(seq 1 10); do
+          while(true); do
+            curl -u "admin:${ADMIN_PASSWORD}" -H 'Accept: application/json; indent=4' $url
+            echo "Attempt $i completed"
+            sleep 1 # Optional: sleep 1 second between attempts to avoid overwhelming the server
+          done        
+        envFrom:
+        - secretRef:
+            name: sampledjangoapp--adminpassword
+        resources: {}
+        # resources:
+        #   requests:
+        #     cpu: {{ .Values.metadataApi.resources.requests.cpu }}
+        #     memory: {{ .Values.metadataApi.resources.requests.memory }}
+        #   limits:
+        #     cpu: {{ .Values.metadataApi.resources.limits.cpu }}
+        #     memory: {{ .Values.metadataApi.resources.limits.memory }}
+        # volumeMounts:
+        # - name: secrets-store01-inline
+        #   mountPath: "/mnt/secrets-store"
+        #   readOnly: true
+        imagePullPolicy: Always
+      volumes:
+      - name: secrets-store01-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "sample-django-app-spc"

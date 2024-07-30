@@ -1,0 +1,49 @@
+trigger:
+  none
+
+variables:
+  buildConfiguration: Release
+  artifactName: db 
+
+pool:
+  vmImage: windows-latest
+
+stages:
+- stage: Build_Db
+  variables:
+  - group: calculator-common
+  jobs:
+  - job: Build_Db_Job
+    steps:
+    - task: MSBuild@1
+      inputs:
+        solution: '$(Pipeline.Workspace)/s/db/Calculator.sln' 
+        msbuildLocationMethod: 'version'
+        msbuildVersion: 'latest'
+        configuration: $(buildConfiguration)
+    - publish: '$(Pipeline.Workspace)/s/db/Calculator/bin/$(buildConfiguration)/Calculator.dacpac'
+      displayName: 'Publish Artifact'
+      artifact: '$(artifactName)'
+- stage: Deploy_Db
+  variables:
+  - group: calculator-dev
+  - group: calculator-dev-kv
+  jobs:
+  - job: Deploy_Db_Job
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifact: $(artifactName)
+        path: '$(Pipeline.Workspace)/$(artifactName)'
+    - task: SqlAzureDacpacDeployment@1
+      inputs:
+        azureConnectionType: 'ConnectedServiceNameARM'
+        azureSubscription: 'VSP'
+        authenticationType: 'server'
+        serverName: '$(dbServerName).database.windows.net'
+        databaseName: '$(dbName)'
+        sqlUsername: '$(dbUser)'
+        sqlPassword: '$(dbPassword)'
+        deployType: 'DacpacTask'
+        deploymentAction: 'Publish'
+        dacpacFile: $(Pipeline.Workspace)/$(artifactName)/Calculator.dacpac

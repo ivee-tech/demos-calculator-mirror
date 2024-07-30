@@ -1,0 +1,17 @@
+cp.icr.io/cp/appc/ace-server-prod@sha256:a5b8899829a393f6bfacd8ccb64c7cfdc5546fd5600809330a4ecc47263d73d7=acraueadevncisws01.azurecr.io/cp/appc/ace-server-prod:12.0.12.0-r1-20240417-022324
+cp.icr.io/cp/appc/acecc-connector-auth-service-prod@sha256:995499c54019b9b151186fb7fc2271e2b35038f2b6072329e9b872704d28880a=acraueadevncisws01.azurecr.io/cp/appc/acecc-connector-auth-service-prod:12.0.12.0-r1-20240417-020022
+cp.icr.io/cp/appc/acecc-content-server-prod@sha256:867238c2a285858fd321c8ef5d0bcb782d3fe358a65d206c8bed1b93271c7aa1=acraueadevncisws01.azurecr.io/cp/appc/acecc-content-server-prod:12.0.12.0-r1-20240416-103408
+cp.icr.io/cp/appc/acecc-couchdb3-prod@sha256:a8a0d12a25a1912b7df972fe0cea0a51eae2d854495754f4d669632b85927577=acraueadevncisws01.azurecr.io/cp/appc/acecc-couchdb3-prod:12.0.12.0-r1-20240417-105301
+cp.icr.io/cp/appc/acecc-dashboard-prod@sha256:9ecc3b346c02a09c28211a9fed425950b002b8ff69d629e01493138876a47e22=acraueadevncisws01.azurecr.io/cp/appc/acecc-dashboard-prod:12.0.12.0-r1-20240417-024202
+cp.icr.io/cp/appc/acecc-designer-runtime-prod@sha256:7d2b602efd8c803d9b8b736bdbf2c35621fb8884a75984682db029c4cb26aa15=acraueadevncisws01.azurecr.io/cp/appc/acecc-designer-runtime-prod:12.0.12.0-r1-20240417-020030
+cp.icr.io/cp/appc/acecc-designer-ui-prod@sha256:46c74f3e0d8d1fc3e07fcaebeb40e653efdf7f361b63d946bccb9cb730da8c6e=acraueadevncisws01.azurecr.io/cp/appc/acecc-designer-ui-prod:12.0.12.0-r1-20240419-160357
+cp.icr.io/cp/appc/acecc-designerflows-prod@sha256:1cb5f3a3a353188c875bf7866a117420684665c36fd403ac5f5afd3973b7c44b=acraueadevncisws01.azurecr.io/cp/appc/acecc-designerflows-prod:12.0.12.0-r1-6934-ifix-20240510-043422
+cp.icr.io/cp/appc/acecc-ecp-prod@sha256:a8144a187d3cbf6c174a7a16b1e78714c5f4e7f8141e4493189c167cac6dd8b7=acraueadevncisws01.azurecr.io/cp/appc/acecc-ecp-prod:12.0.12.0-r1-20240419-130712
+cp.icr.io/cp/appc/acecc-flow-test-manager-prod@sha256:fc403066eeb1ab9bedafe0c71b6f1ec8bac012cc841bd83fcce161e85a66e712=acraueadevncisws01.azurecr.io/cp/appc/acecc-flow-test-manager-prod:12.0.12.0-r1-20240417-030014
+cp.icr.io/cp/appc/acecc-flowdoc-authoring-prod@sha256:b7d525f1f4ef49b7cdc536483a65a40ce6798f037ff56d2dac6c0cf7b5451a99=acraueadevncisws01.azurecr.io/cp/appc/acecc-flowdoc-authoring-prod:12.0.12.0-r1-20240417-030014
+cp.icr.io/cp/appc/acecc-mapping-assist-prod@sha256:9f9ec61a5d0560c4e8f5268ed6abd9075fd25bca59cc44aa8b393432983b32f8=acraueadevncisws01.azurecr.io/cp/appc/acecc-mapping-assist-prod:12.0.12.0-r1-20240416-030013
+cp.icr.io/cp/appc/acecc-proxy-prod@sha256:1da155c2d5c553eb514488a6dc31d7e6fcae02034963a07d11b76cb06cf99037=acraueadevncisws01.azurecr.io/cp/appc/acecc-proxy-prod:12.0.12.0-r1-20240416-115503
+cp.icr.io/cp/appc/acecc-velero-plugin-prod@sha256:bce87cf85e3eadb2a25ee89f1426ec09e30cdef01b058e4b1b1cfe4002a3b394=acraueadevncisws01.azurecr.io/cp/appc/acecc-velero-plugin-prod:12.0.12.0-r1-20240416-100912
+icr.io/cpopen/appconnect-operator-bundle@sha256:fb1b9ee870957194402312b0cca0b5cc72a0ce02da27b05bd4da6171ecbdf0a2=acraueadevncisws01.azurecr.io/cpopen/appconnect-operator-bundle:11.5.1-20240510-151448
+icr.io/cpopen/appconnect-operator-catalog@sha256:79a9cb9b855d7ee1e10056e914df7aea6061d2cbffc7bfd6387a21b7fed76842=acraueadevncisws01.azurecr.io/cpopen/appconnect-operator-catalog:11.5.1-20240510-151448
+icr.io/cpopen/appconnect-operator@sha256:9a6d6aa93de33d99e66ecfc1f71fb76aa24b0904fbc479ce82c49e49d542f920=acraueadevncisws01.azurecr.io/cpopen/appconnect-operator:11.5.1-20240510-151448

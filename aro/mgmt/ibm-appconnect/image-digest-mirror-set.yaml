@@ -1,0 +1,12 @@
+apiVersion: config.openshift.io/v1
+kind: ImageDigestMirrorSet
+metadata:
+  name: ibm-appconnect
+spec:
+  imageDigestMirrors:
+  - mirrors:
+    - acraueadevncisws01.azurecr.io/cp
+    source: cp.icr.io/cp
+  - mirrors:
+    - acraueadevncisws01.azurecr.io/cpopen
+    source: icr.io/cpopen

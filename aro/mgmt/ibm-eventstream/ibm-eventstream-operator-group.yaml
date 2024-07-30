@@ -1,0 +1,9 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: ibm-eventstream-operator-group
+  namespace: ibm-eventstream
+spec:
+  targetNamespaces:
+  - ibm-eventstream
+  upgradeStrategy: Default

@@ -1,0 +1,20 @@
+apiVersion: operator.openshift.io/v1alpha1
+kind: ImageContentSourcePolicy
+metadata:
+  labels:
+    operators.openshift.org/catalog: "true"
+  name: operator-0
+spec:
+  repositoryDigestMirrors:
+  - mirrors:
+    - acraueadevncisws01.azurecr.io/openshift-logging
+    source: registry.redhat.io/openshift-logging
+  - mirrors:
+    - acraueadevncisws01.azurecr.io/cert-manager
+    source: registry.redhat.io/cert-manager
+  - mirrors:
+    - acraueadevncisws01.azurecr.io/openshift4
+    source: registry.redhat.io/openshift4
+  - mirrors:
+    - acraueadevncisws01.azurecr.io/redhat
+    source: registry.redhat.io/redhat

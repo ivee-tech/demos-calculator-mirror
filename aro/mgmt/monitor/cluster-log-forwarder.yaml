@@ -1,0 +1,57 @@
+apiVersion: logging.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: instance
+  namespace: ${NS}
+spec:
+  inputs: 
+   - name: azure-monitor-app
+     application:
+        namespaces:
+        - ibm-cp4i-dev
+  #  - name: azure-monitor-infra
+  #    infrastructure:
+  #       namespaces:
+  #       - ibm-cp4i-dev
+  #  - name: azure-monitor-audit
+  #    audit:
+  #       namespaces:
+  #       - ibm-cp4i-dev
+  outputs:
+  - name: azure-monitor-app
+    type: azureMonitor
+    azureMonitor:
+      customerId: ${WORKSPACE_ID}
+      logType: aro_application_logs
+    secret:
+      name: azure-monitor-shared-key
+  - name: azure-monitor-infra
+    type: azureMonitor
+    azureMonitor:
+      customerId: ${WORKSPACE_ID}
+      logType: aro_infrastructure_logs
+    secret:
+      name: azure-monitor-shared-key
+  - name: azure-monitor-audit
+    type: azureMonitor
+    azureMonitor:
+      customerId: ${WORKSPACE_ID}
+      logType: aro_audit_logs
+    secret:
+      name: azure-monitor-shared-key
+  pipelines:
+  - name: app-pipeline
+    inputRefs:
+    - azure-monitor-app # application
+    outputRefs:
+    - azure-monitor-app
+  - name: infra-pipeline
+    inputRefs:
+    - infrastructure
+    outputRefs:
+    - azure-monitor-infra
+  - name: audit-pipeline
+    inputRefs:
+    - audit
+    outputRefs:
+    - azure-monitor-audit

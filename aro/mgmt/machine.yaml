@@ -1,0 +1,39 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: Machine
+metadata:
+  name: aro-auea-dev-ncis-ws0-dzpcq-worker-australiaeast1-1j5al
+  namespace: openshift-machine-api
+  labels:
+    machine.openshift.io/cluster-api-cluster: aro-cluster
+    machine.openshift.io/cluster-api-machine-role: worker
+    machine.openshift.io/cluster-api-machine-type: worker
+    machine.openshift.io/instance-type: Standard_D4s_v3
+    machine.openshift.io/region: AustraliaEast
+    machine.openshift.io/zone: '1'
+spec:
+  providerSpec:
+    value:
+      apiVersion: azureproviderconfig.openshift.io/v1beta1
+      kind: AzureMachineProviderSpec
+      osDisk:
+        diskSizeGB: 128
+        managedDisk:
+          storageAccountType: Premium_LRS
+        osType: Linux
+      vmSize: Standard_D4s_v3
+      location: AustraliaEast
+      image:
+        offer: aro4
+        publisher: azureopenshift
+        sku: aro_412
+        version: 412.86.20230503
+      networkResourceGroup: aro-network-rg
+      resourceGroup: aro-cluster-rg
+      subnet: worker-subnet
+      publicLoadBalancer: aro-public-lb
+      vnet: aro-vnet
+      credentialsSecret:
+        name: azure-cloud-credentials
+        namespace: openshift-machine-api
+      userDataSecret:
+        name: worker-user-data

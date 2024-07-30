@@ -1,0 +1,29 @@
+trigger:
+  none
+
+stages:
+- stage: Validate_Publish_ARM_Template
+  variables:
+  - group: calculator-common
+  jobs:
+  - template: ../templates/validate-publish-ARM-template.yml
+    parameters: 
+      azureSubscription: 'VSP'
+      resourceGroup: $(resourceGroup)
+      location: $(location)
+      armTemplate: $(sqlArmTemplate)
+- stage: Deploy_Sql_Dev
+  variables:
+  - group: calculator-dev
+  - group: calculator-dev-kv
+  jobs:
+  - template: ../templates/deploy-sql-infra.yml
+    parameters:
+      azureSubscription: 'VSP'
+      resourceGroup: $(resourceGroup)
+      location: $(location)
+      sqlArmTemplate: $(sqlArmTemplate)
+      dbServerName: $(dbServerName)
+      Settings_AppDB: $(dbName)
+      Settings_AppDBUser: $(dbUser)
+      Settings_AppDBPassword: $(dbPassword)

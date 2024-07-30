@@ -1,0 +1,11 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: ibm-appconnect-sub
+  namespace: ibm-ace-dev
+spec:
+  channel: v11.5
+  installPlanApproval: Automatic
+  name: ibm-appconnect
+  source: appconnect-operator-catalogsource
+  sourceNamespace: openshift-marketplace

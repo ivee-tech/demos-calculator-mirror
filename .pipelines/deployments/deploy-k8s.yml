@@ -1,0 +1,17 @@
+trigger:
+  none
+
+stages:
+- stage: Build_Ui_Image
+  variables:
+  - name: ns
+    value: calculator
+  jobs:
+  - job: Deploy_Manifests
+    pool:
+      name: 'Demos'
+    steps:
+    - script: |
+        cd $(Pipeline.Workspace)/s/k8s/manifests
+        kubectl apply -f ./calculator-api-dep.yaml -f ./calculator-api-svc.yaml -f ./calculator-ui-dep.yaml -f ./calculator-ui-svc.yaml -f ./calculator-ing.yaml -n $NS
+      displayName: 'Deploy manifests'

@@ -1,0 +1,68 @@
+{
+    "headers": [
+        {
+            "name": "Host",
+            "value": "demos-auea-dev-ui-calc.azurewebsites.net"
+        },
+        {
+            "name": "Content-Length",
+            "value": 26
+        },
+        {
+            "name": "sec-ch-ua",
+            "value": "\"Microsoft Edge\";v=\"123\",\"Not:A-Brand\";v=\"8\",\"Chromium\";v=\"123\""
+        },
+        {
+            "name": "sec-ch-ua-mobile",
+            "value": "?0"
+        },
+        {
+            "name": "ocp-apim-subscription-key",
+            "value": "***"
+        },
+        {
+            "name": "X-Forwarded-For",
+            "value": "110.141.150.10,13.91.254.72"
+        },
+        {
+            "name": "sec-ch-ua-platform",
+            "value": "\"Windows\""
+        },
+        {
+            "name": "Sec-Fetch-Site",
+            "value": "cross-site"
+        },
+        {
+            "name": "Sec-Fetch-Mode",
+            "value": "cors"
+        },
+        {
+            "name": "Sec-Fetch-Dest",
+            "value": "empty"
+        },
+        {
+            "name": "Cache-Control",
+            "value": "no-cache, no-store"
+        },
+        {
+            "name": "Content-Type",
+            "value": "text/plain;charset=UTF-8"
+        },
+        {
+            "name": "Accept",
+            "value": "*/*"
+        },
+        {
+            "name": "Accept-Encoding",
+            "value": "gzip,deflate,br,zstd"
+        },
+        {
+            "name": "Accept-Language",
+            "value": "en-GB,en;q=0.9,en-US;q=0.8,en-AU;q=0.7"
+        },
+        {
+            "name": "Referer",
+            "value": "https://apimanagement.hosting.portal.azure.net/"
+        }
+    ]
+}

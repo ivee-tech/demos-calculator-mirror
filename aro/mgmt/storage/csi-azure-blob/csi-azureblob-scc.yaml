@@ -1,0 +1,31 @@
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: csi-azureblob-scc
+  annotations:
+    kubernetes.io/description: >-
+      allows access to all privileged and host features and the
+      ability to run as any user, any group, any fsGroup, and with any SELinux
+      context.
+allowHostPorts: true
+allowPrivilegedContainer: true
+runAsUser:
+  type: RunAsAny
+users:
+  - 'system:serviceaccount:${CSI_BLOB_PROJECT}:csi-blob-controller-sa'
+  - 'system:serviceaccount:${CSI_BLOB_PROJECT}:csi-blob-node-sa'
+allowHostDirVolumePlugin: true
+seccompProfiles: 
+  - '*'
+seLinuxContext:
+  type: RunAsAny 
+fsGroup:
+  type: RunAsAny
+groups:
+  - 'system:cluster-admins'
+  - 'system:nodes'
+  - 'system:masters'
+volumes:
+  - '*'
+allowHostPID: true
+allowHostNetwork: true    

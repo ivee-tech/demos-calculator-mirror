@@ -1,0 +1,66 @@
+trigger:
+  none
+
+stages:
+- stage: Validate_Publish_ARM_Template
+  variables:
+  - group: calculator-common
+  jobs:
+  - template: ../templates/validate-publish-ARM-template.yml
+    parameters: 
+      azureSubscription: 'VSP'
+      resourceGroup: $(resourceGroup)
+      location: $(location)
+      armTemplate: $(webAppArmTemplate)
+- stage: Deploy_Web_App_Dev
+  variables:
+  - group: calculator-dev
+  jobs:
+  - template: ../templates/deploy-web-app-infra.yml
+    parameters:
+      azureSubscription: 'VSP'
+      resourceGroup: $(resourceGroup)
+      location: $(location)
+      webAppArmTemplate: $(webAppArmTemplate)
+      planName: $(planName)
+      appName: $(appName)
+      skuName: $(skuName)
+      skuCapacity: $(skuCapacity)
+      setSystemIdentity: 'on'
+  # - job: Queue_UI_Infra_Pipeline
+  #   dependsOn: Deploy_Web_App_Job
+  #   steps:
+  #   - task: PowerShell@2
+  #     inputs:
+  #       targetType: 'inline'
+  #       script: |
+  #         $buildsUrl = "$(System.TeamFoundationCollectionUri)/$(System.TeamProject)/_apis/build/builds?api-version=7.0"
+  #         $org = 'DevOps'
+  #         $pat = "$(PAT)"
+  #         $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$($org):$pat"))
+  #         $contentType = 'application/json'
+  #         $buildDefId = $(uiInfraPipelineId)
+  #         $data = @{
+  #             definition = @{
+  #                 id = $buildDefId;
+  #             }
+  #         } | ConvertTo-Json -Depth 10
+  #         $response = Invoke-RestMethod -Headers @{Authorization="Basic $($base64AuthInfo)"} -Uri $buildsUrl -Method Post -Body $data -ContentType $contentType
+  #         $response
+# - stage: Deploy_Web_App_Test
+#   variables:
+#   - group: calculator-test
+#   jobs:
+#   - deployment: deploy_test
+#     environment: calculator-test
+#   - template: ../templates/deploy-web-app-infra.yml
+#     parameters:
+#       azureSubscription: 'VSP'
+#       resourceGroup: $(resourceGroup)
+#       location: $(location)
+#       webAppArmTemplate: $(webAppArmTemplate)
+#       planName: $(planName)
+#       appName: $(appName)
+#       skuName: $(skuName)
+#       skuCapacity: $(skuCapacity)
+#       dependsOn: deploy_test

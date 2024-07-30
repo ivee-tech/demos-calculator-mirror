@@ -1,0 +1,21 @@
+trigger:
+  none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- group: calculator-mirror
+steps:
+- checkout: self
+  persistCredentials: true
+
+- script: |
+    git config --global user.email "radudanielro@yahoo.com"
+    git config --global user.name "Dan Radu"
+    git remote add github https://github.com/ivee-tech/demos-calculator-mirror.git
+    git push github HEAD:main --force
+  env:
+    GITHUB_REPO_URL: https://github.com/ivee-tech/demos-calculator-mirror.git
+    GITHUB_TOKEN: $(GitHubToken)
+  displayName: 'Mirror to GitHub'

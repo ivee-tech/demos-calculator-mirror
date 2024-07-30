@@ -1,0 +1,32 @@
+parameters:
+- name: azureSubscription
+  type: string
+- name: resourceGroup
+  type: string
+- name: location
+  type: string
+- name: kvArmTemplate
+  type: string
+- name: kvName
+  type: string
+
+
+jobs:
+- job: Deploy_KV_Job
+  steps:
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      artifact: ${{ parameters.kvArmTemplate }}
+      path: $(Pipeline.Workspace)/${{ parameters.kvArmTemplate }}
+  - script: |
+      dir $(Pipeline.Workspace)
+      dir $(Pipeline.Workspace)/${{ parameters.kvArmTemplate }}
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Azure Deployment: Deploy KeyVault on ${{ parameters.resourceGroup }}'
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscription }}
+      resourceGroupName: ${{ parameters.resourceGroup }}
+      location: ${{ parameters.location }}
+      csmFile: '$(Pipeline.Workspace)/${{ parameters.kvArmTemplate }}/azuredeploy.json'
+      overrideParameters: '-keyVaultName ${{ parameters.kvName }}'
+      deploymentName: 'app-kv-deployment'

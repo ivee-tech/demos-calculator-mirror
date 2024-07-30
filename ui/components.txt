@@ -1,0 +1,46 @@
+
+.calc {
+    margin-top: 100px;
+}
+
+.calc-button {
+    width: 100px;
+    height: 40px;
+}
+
+.calc-button-small {
+    width: 50px;
+    height: 40px;
+}
+
+.calc-button-op {
+    width: 100px;
+    height: 40px;
+}
+
+.calc-button-result {
+    width: 300px;
+    height: 40px;
+}
+
+.calc-buttons {
+    margin-top: 20px;
+}
+
+.txt-expr {
+    width: 292px;
+}
+
+.txt-result {
+    width: 74px;
+    font-weight: bold;
+}
+
+.div-results {
+    margin-top: 20px;
+}
+
+.error {
+    font-weight: bold;
+    color: #ff0000;
+}

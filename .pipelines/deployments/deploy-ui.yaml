@@ -1,0 +1,41 @@
+trigger:
+  none
+
+pool:
+  vmImage: windows-latest
+  # name: Demos
+  
+stages:
+- stage: Build_Web_App
+  variables:
+  - group: calculator-common
+  jobs:
+  - job: Build_Web_App_UI_Job
+    steps:
+    - template: '../templates/build-web-app-ui-only.yml'
+      parameters: 
+        webProjName: $(webProjNameUI)
+- stage: Deploy_Web_App_Dev
+  variables:
+  - group: calculator-dev
+  jobs:
+  - job: Deploy_Web_App
+    steps:
+    - template: '../templates/tokenize-deploy-web-app-ui.yml'
+      parameters: 
+        azureSubscription: 'VSP'
+        appName: $(appNameUI)
+        webProjName: $(webProjNameUI)
+# - stage: Deploy_Web_App_Test
+#   variables:
+#   - group: calculator-test
+#   jobs:
+#   - deployment: test_deploy
+#     environment: calculator-test
+#   - job: Deploy_Web_App
+#     steps:
+#     - template: '../templates/tokenize-deploy-web-app-ui.yml'
+#       parameters: 
+#         azureSubscription: 'VSP'
+#         appName: $(appNameUI)
+#         webProjName: $(webProjNameUI)

@@ -1,0 +1,25 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: sample-django-app-spc # needs to be unique per namespace
+spec:
+  provider: azure
+  parameters:
+    usePodIdentity: "false"
+    useVMManagedIdentity: "false"          
+    clientID: {{ .Values.workloadIdentityId }} # Setting this to use workload identity
+    keyvaultName: {{ .Values.kvName }}      # Set to the name of your key vault
+    cloudName: ""                         # [OPTIONAL for Azure] if not provided, the Azure environment defaults to AzurePublicCloud
+    objects:  |
+      array:
+        - |
+          objectName: SampleDjangoApp--AdminPassword
+          objectType: secret              
+          objectVersion: ""               
+    tenantId: {{ .Values.tenantId }}        # The tenant ID of the key vault
+  secretObjects:                              # [OPTIONAL] SecretObjects defines the desired state of synced Kubernetes secret objects
+  - data:
+    - key: ADMIN_PASSWORD
+      objectName: SampleDjangoApp--AdminPassword
+    secretName: sampledjangoapp--adminpassword
+    type: Opaque

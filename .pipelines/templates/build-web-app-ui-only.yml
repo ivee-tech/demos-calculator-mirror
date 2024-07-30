@@ -1,0 +1,36 @@
+parameters:
+- name: webProjName
+  type: string
+
+# jobs:
+# - job: Build_Web_App_UI_Job
+steps:
+#  - task: npmAuthenticate@0
+#    inputs:
+#      workingFile: '${{ parameters.webProjName }}/.npmrc'
+- script: 'npm cache clean --force'
+  displayName: 'npm cache clean'
+- script: |
+    npm install
+  displayName: 'npm install'
+  workingDirectory: '${{ parameters.webProjName }}'
+- script: 'npm run build'
+  displayName: 'npm build'
+  workingDirectory: '${{ parameters.webProjName }}'
+- task: CopyFiles@2
+  displayName: 'Copy UI Files'
+  inputs:
+    SourceFolder: '${{ parameters.webProjName }}/dist'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.webProjName }}'
+    CleanTargetFolder: true
+    OverWrite: true
+- task: CopyFiles@2
+  displayName: 'Copy web.config'
+  inputs:
+    SourceFolder: '${{ parameters.webProjName }}'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.webProjName }}'
+    Contents: web.config
+    OverWrite: true
+- publish: '$(Build.ArtifactStagingDirectory)/${{ parameters.webProjName }}'
+  displayName: 'Publish Artifact'
+  artifact: '${{ parameters.webProjName }}'

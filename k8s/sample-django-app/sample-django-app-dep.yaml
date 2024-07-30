@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-django-app-dep
+  namespace: itp # {{ .Values.namespace }}
+  labels:
+    app: sample-django-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: sample-django-app
+  template:
+    metadata:
+      labels:
+        azure.workload.identity/use: "true"
+        tier: sample-django-app
+    spec:
+      serviceAccountName: sample-django-app-sa
+      containers:
+      - name: sample-django-app
+        image: acr85618.azurecr.io/itp/sample-django-app:{{ .Values.tag }} # {{ .Values.repo }}/sample-django-app:{{ .Values.api.tag }}
+        ports:
+        - containerPort: 8000
+        resources: {}
+        # resources:
+        #   requests:
+        #     cpu: {{ .Values.metadataApi.resources.requests.cpu }}
+        #     memory: {{ .Values.metadataApi.resources.requests.memory }}
+        #   limits:
+        #     cpu: {{ .Values.metadataApi.resources.limits.cpu }}
+        #     memory: {{ .Values.metadataApi.resources.limits.memory }}
+        imagePullPolicy: Always

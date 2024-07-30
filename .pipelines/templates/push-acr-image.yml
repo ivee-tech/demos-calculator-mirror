@@ -1,0 +1,93 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+parameters:
+- name: dockerRegistryServiceConnection
+  type: string
+- name: containerRegistry
+  type: string
+- name: imageRepository
+  type: string
+- name: tag
+  type: string
+  default: '0.0.1'
+- name: appPath
+  type: string
+- name: scanImage
+  type: boolean
+  default: false
+- name: vmImageName
+  type: string
+  default: 'ubuntu-latest'
+- name: poolName
+  type: string
+  default: ''
+
+
+jobs:
+- job: Build_Acr_Image
+  displayName: Build Acr Image
+  variables:
+    # Container registry service connection established during pipeline creation
+    # dockerRegistryServiceConnection: ${{ parameters.dockerRegistryServiceConnection }}
+    imageRepository: ${{ parameters.imageRepository }}
+    containerRegistry: ${{ parameters.containerRegistry }}
+    tag: ${{ parameters.tag }}
+    dockerfilePath: '**/Dockerfile'
+    trivyImage: 'tools/trivy'
+    trivyTag: '0.34.0'
+    appPath: ${{ parameters.appPath }}
+  pool:
+   ${{ if ne('${{ parameters.poolName }}', '') }}:
+      name: ${{ parameters.poolName }}
+   ${{ if ne('${{ parameters.vmImageName }}', '') }}:
+      vmImage: ${{ parameters.vmImageName }}
+  steps:
+  - task: Docker@2
+    displayName: Login to container registry
+    inputs:
+      command: login
+      containerRegistry: ${{ parameters.dockerRegistryServiceConnection }}
+  - script: |
+      docker run -i -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $(Pipeline.Workspace)/s/$(appPath):/app/myapp \
+        -v $(Pipeline.Workspace)/a/results:/app/results \
+        $(containerRegistry)/$(trivyImage):$(trivyTag) config ./myapp --format template --template @contrib/junit.tpl --output ./results/config-results.xml
+    displayName: Scan config
+    condition: eq('${{ parameters.scanImage }}', true)
+  - task: Docker@2
+    displayName: Build image
+    inputs:
+      command: build
+      repository: $(imageRepository)
+      dockerfile: $(dockerfilePath)
+      arguments: '--build-arg=PAT=$(FEED_PAT)'
+      buildContext: '$(Pipeline.Workspace)/s'
+      tags: |
+        $(tag)
+  - script: |
+      docker run -i -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $(Pipeline.Workspace)/a/results:/app/results \
+          $(containerRegistry)/$(trivyImage):$(trivyTag) image $(containerRegistry)/$(imageRepository):$(tag) --format template --template @contrib/junit.tpl --output ./results/image-results.xml
+      ls $(Pipeline.Workspace)/a/results
+    displayName: Scan image
+    condition: eq('${{ parameters.scanImage }}', true)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '$(Pipeline.Workspace)/a/results/*-results.xml'
+    condition: eq('${{ parameters.scanImage }}', true)
+  - task: PublishPipelineArtifact@1
+    inputs:
+      path: '$(Pipeline.Workspace)/a/results'
+      artifactName: 'results'
+      artifactType: 'pipeline'
+    condition: eq('${{ parameters.scanImage }}', true)
+  - task: Docker@2
+    displayName: Push image
+    inputs:
+      command: push
+      repository: $(imageRepository)
+      tags: |
+        $(tag)

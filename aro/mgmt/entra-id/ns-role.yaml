@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ${NS}-role
+  namespace: ${NS}
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "configmaps", "namespaces", "projects"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "watch", "list"]

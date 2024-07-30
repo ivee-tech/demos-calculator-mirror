@@ -1,0 +1,20 @@
+trigger:
+  none
+
+stages:
+- stage: Deploy_Sql_Api_UI_Dev
+  variables:
+  - group: calculator-dev
+  - group: calculator-dev-kv
+  jobs:
+  - job: Deploy_Sql_Api_UI_Dev_Job
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'VSP'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          parameters="dbServerName=$(dbServerName) dbName=$(dbName) sqlAdministratorLogin=$(dbUser) planNameApi=$(planName) appNameApi=$(appName) skuNameApi=$(skuName) skuCapacityApi=$(skuCapacity) planNameUI=$(planNameUI) appNameUI=$(appNameUI) skuNameUI=$(skuNameUI) skuCapacityUI=$(skuCapacityUI) sqlAdministratorLoginPassword='$(dbPassword)'"
+          echo $parameters
+          az deployment group create --resource-group $(resourceGroup) --template-file $(Pipeline.Workspace)/s/infra/main.bicep --parameters $parameters

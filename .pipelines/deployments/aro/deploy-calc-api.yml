@@ -1,0 +1,17 @@
+trigger:
+  none
+
+stages:
+- stage: Deploy_Calc_API
+  variables:
+  - name: ns
+    value: calculator
+  jobs:
+  - job: Deploy_Manifests
+    pool:
+      name: 'Demos'
+    steps:
+    - script: |
+        cd $(Pipeline.Workspace)/s/aro/manifests
+        oc apply -f ./calculator-api-dep.yaml -f ./calculator-api-svc.yaml -n $NS
+      displayName: 'Deploy manifests'

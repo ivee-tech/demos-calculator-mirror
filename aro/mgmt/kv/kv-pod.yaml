@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: quick-start
+  namespace: ${SERVICE_ACCOUNT_NAMESPACE}
+  labels:
+    azure.workload.identity/use: "true"
+spec:
+  serviceAccountName: ${SERVICE_ACCOUNT_NAME}
+  securityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - image: ghcr.io/azure/azure-workload-identity/msal-go
+      name: oidc
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+      env:
+        - name: KEYVAULT_URL
+          value: ${KEYVAULT_URL}
+        - name: SECRET_NAME
+          value: ${KEYVAULT_SECRET_NAME}
+      resources: {}

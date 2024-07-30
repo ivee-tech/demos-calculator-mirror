@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-disk-static
+  namespace: test-storage
+  labels:
+    disk: disk-auea-dev-ncis-x01
+spec:
+  nodeName: aro-auea-dev-ncis-ws0-czbdt-worker-australiaeast1-rffrm
+  containers:
+  - name: nginx01
+    image: nginx
+    volumeMounts:
+    - mountPath: "/mnt/azure"
+      name: azure-disk-volume
+    resources: {}
+  volumes:
+  - name: azure-disk-volume
+    persistentVolumeClaim:
+      claimName: azure-disk-static-pvc

@@ -1,0 +1,8 @@
+kind: OAuthClient
+apiVersion: oauth.openshift.io/v1
+metadata:
+   name: ${USER_NAME}
+secret: ${SECRET}
+redirectURIs:
+  - ${REDIRECT_URI}
+grantMethod: prompt

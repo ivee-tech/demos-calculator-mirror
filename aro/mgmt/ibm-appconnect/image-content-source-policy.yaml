@@ -1,0 +1,12 @@
+apiVersion: operator.openshift.io/v1alpha1
+kind: ImageContentSourcePolicy
+metadata:
+  name: ibm-appconnect
+spec:
+  repositoryDigestMirrors:
+  - mirrors:
+    - acraueadevncisws01.azurecr.io/cp
+    source: cp.icr.io/cp
+  - mirrors:
+    - acraueadevncisws01.azurecr.io/cpopen
+    source: icr.io/cpopen
